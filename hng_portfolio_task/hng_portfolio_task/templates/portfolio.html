@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HNG Portfolio Task</title>
+    <link rel="shortcut icon" href="https://hng.tech/img/brand-logo.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inder&family=WindSong:wght@500&family=Georama:wght@300&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
+    <script src="https://use.fontawesome.com/602cf649f7.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="spaced align-center">
+            <a href="https://ingressive.org/">
+                <h1>i4G</h1>
+            </a>
+            <ul class="flex">
+                <li class="mr-16"><a href="#services">Services</a></li>
+                <li><a href="#contact-me">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="wrapper">
+            <section id='intro'>
+                <span class='floating_text'>Abdulsalam Fawaz</span>
+                <div>
+                    <h1>I am Abdulsalam Fawaz Akolade.</h1>
+                    <p>I create beautiful and functional websites for business enterprises.</p>
+                    <ul class="links flex">
+                        <a href="https://www.github.com/Fawaz441" target="_blank">
+                            <li class="mr-16 centered-vh"><i class='fa fa-github-square fa-2x'></i></li>
+                        </a>
+                        <a href="https://www.linkedin.com/in/fawaz-a-abdulsalam-4bb6791a0/" target="_blank">
+                            <li class="mr-16 centered-vh"><i class='fa fa-linkedin fa-2x'></i></li>
+                        </a>
+                    </ul>
+                </div>
+                <div class="classy_image">
+                    <img src={{main}} />
+                </div>
+            </section>
+            <section id='services'>
+                <div class="centered-vh">
+                    <h2>Services</h2>
+                </div>
+                <div class="services-cards centered-vh">
+                    <div class="service-card mr-32">
+                        <img class="card-image" src={{dev}} />
+                        <p class="card-text">
+                            I develop backend services for businesses using Django, a python based web framework.
+                        </p>
+                    </div>
+                    <div class="service-card mr-32">
+                        <img class="card-image" src={{design}} />
+                        <p class="card-text">
+                            I design websites using Vanilla CSS, JS and the React.js framework.
+                        </p>
+                    </div>
+                    <div class="service-card mr-32">
+                        <img class="card-image" src={{dev}} />
+                        <p class="card-text">
+                            I develop mobile applications using React Native, a JS based framework.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section id='contact-me'>
+                <div class="centered-vh">
+                    <h2>Contact Me</h2>
+                </div>
+                <form>
+                    {% csrf_token %}
+                    <label for="name">Name</label>
+                    {{form.name}}
+                    <label for="email">Email</label>
+                    {{form.email}}
+                    <label for="message">Message</label>
+                    {{form.message}}
+                    <input type="submit" value="Submit" id="form-submit"/>
+
+                </form>
+            </section>
+        </div>
+    </div>
+    <div class='centered-vh' style="margin-top:3rem;">
+        <img style='height:40px;object-fit:cover' src="https://ingressive.org/wp-content/uploads/2020/05/I4G-Logo-Color-Cropped.png" class="mr-16"/>
+        <img style='height:40px;object-fit:cover' src="https://hng.tech/img/brand-logo.png"/>
+    </div>
+</body>
+{% comment %}
+<!-- Illustration by <a href="https://icons8.com/illustrations/author/5eb2a7bd01d0360019f124e7">Olha Khomich</a> from <a href="https://icons8.com/illustrations">Ouch!</a> -->
+{% endcomment %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(()=> {
+        $('#contact-me form').submit((e)=>{
+            e.preventDefault()
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            let data = $('#contact-me form').serialize()
+            $('#form-submit').val('Loading...')
+            $('#form-submit').prop('disabled',true)
+            $.ajax({
+                type:'POST',
+                headers: {'X-CSRFToken': csrftoken},
+                url:'',
+                data:data,
+                success:(response) => {
+                    $('#form-submit').val('Submit')
+                    $('#form-submit').prop('disabled',false)
+                    if(response.status==='success'){
+                        Swal.fire({
+                        icon: 'success',
+                        text: 'Your message has been sent!',
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                        $('#contact-me form').trigger('reset')
+                        window.scrollTo(0,0)
+                       
+                    }
+                    if(response.status==='error'){
+                        Swal.fire({
+                        icon: 'error',
+                        text: 'There was an error submitting your message',
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                    }
+                }
+            })
+        })
+    })
+</script>
+</html>

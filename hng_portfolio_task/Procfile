@@ -1,0 +1,1 @@
+web: gunicorn hng_portfolio_task.wsgi --log-file -
